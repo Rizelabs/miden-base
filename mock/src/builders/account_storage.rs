@@ -28,6 +28,6 @@ impl AccountStorageBuilder {
     }
 
     pub fn build(&self) -> AccountStorage {
-        AccountStorage::new(self.items.clone()).unwrap()
+        AccountStorage::new(self.items.clone(), None).unwrap()
     }
 }

@@ -274,10 +274,13 @@ fn get_faucet_account_with_max_supply_and_total_issuance(
         AccountCode::new(faucet_account_code_ast.clone(), &account_assembler).unwrap();
 
     let faucet_storage_slot_1 = [Felt::new(max_supply), Felt::new(0), Felt::new(0), Felt::new(0)];
-    let mut faucet_account_storage = AccountStorage::new(vec![
-        (0, (StorageSlotType::Value { value_arity: 0 }, public_key)),
-        (1, (StorageSlotType::Value { value_arity: 0 }, faucet_storage_slot_1)),
-    ])
+    let mut faucet_account_storage = AccountStorage::new(
+        vec![
+            (0, (StorageSlotType::Value { value_arity: 0 }, public_key)),
+            (1, (StorageSlotType::Value { value_arity: 0 }, faucet_storage_slot_1)),
+        ],
+        None,
+    )
     .unwrap();
 
     if total_issuance.is_some() {
