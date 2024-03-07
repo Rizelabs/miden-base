@@ -23,6 +23,14 @@ const.ACCOUNT_VAULT_ADD_ASSET_EVENT=131072
 # Event emitted to signal that an asset is being removed from the account vault.
 const.ACCOUNT_VAULT_REMOVE_ASSET_EVENT=131073
 
+# CONSTANTS
+# =================================================================================================
+
+# Constants for different note types
+const.OFFCHAIN_NOTE=0
+const.ENCRYPTED_NOTE=1
+const.PUBLIC_NOTE=2
+
 # AUTHENTICATION
 # =================================================================================================
 
@@ -419,7 +427,9 @@ export.get_output_notes_hash
     # => [COM]
 end
 
-#! Creates a new note and returns a pointer to the memory address at which the note is stored.
+#! Creates a new offchain note and returns a pointer to the memory address at which the note is stored.
+#!
+#! Offchain notes have only their hash published to the network.
 #!
 #! Inputs: [ASSET, tag, RECIPIENT]
 #! Outputs: [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -428,12 +438,39 @@ end
 #! tag is the tag to be included in the note.
 #! RECIPIENT is the recipient of the note.
 #! ptr is the pointer to the memory address at which the note is stored.
-export.create_note
+export.create_offchain_note
     # authenticate that the procedure invocation originates from the account context
     exec.authenticate_account_origin
     # => [ASSET, tag, RECIPIENT]
 
-    # create the note
+    push.OFFCHAIN_NOTE
+    # => [note_type, ASSET, tag, RECIPIENT]
+
+    # create the offchain note
+    exec.tx::create_note
+    # => [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
+end
+
+#! Creates a new public note and returns a pointer to the memory address at which the note is stored.
+#!
+#! Public notes have their contents published to the network.
+#!
+#! Inputs: [ASSET, tag, RECIPIENT]
+#! Outputs: [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
+#!
+#! ASSET is the asset to be included in the note.
+#! tag is the tag to be included in the note.
+#! RECIPIENT is the recipient of the note.
+#! ptr is the pointer to the memory address at which the note is stored.
+export.create_public_note
+    # authenticate that the procedure invocation originates from the account context
+    exec.authenticate_account_origin
+    # => [ASSET, tag, RECIPIENT]
+
+    push.PUBLIC_NOTE
+    # => [note_type, ASSET, tag, RECIPIENT]
+
+    # create the local note
     exec.tx::create_note
     # => [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
 end

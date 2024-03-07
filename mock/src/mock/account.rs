@@ -81,10 +81,24 @@ pub fn mock_account_storage() -> AccountStorage {
     AccountStorage::new(vec![storage_item_0(), storage_item_1()]).unwrap()
 }
 
-// Constants that define the indexes of the account procedures of interest
-pub const ACCOUNT_PROCEDURE_INCR_NONCE_PROC_IDX: usize = 2;
-pub const ACCOUNT_PROCEDURE_SET_ITEM_PROC_IDX: usize = 3;
-pub const ACCOUNT_PROCEDURE_SET_CODE_PROC_IDX: usize = 4;
+// The MAST root of the default account's interface. Use these constants to interact with the
+// account's procedures.
+pub const ACCOUNT_RECEIVE_ASSET_MAST_ROOT: &str =
+    "0x5e2981e93f961ddc63f5f65332554cafabe642d1eccff58a9279be4a13075f15";
+pub const ACCOUNT_SEND_ASSET_MAST_ROOT: &str =
+    "0xc5740bad4e353fda39044d29436beb899629667fc57381aaf7971d664712ef5c";
+pub const ACCOUNT_INCR_NONCE_MAST_ROOT: &str =
+    "0xd765111e22479256e87a57eaf3a27479d19cc876c9a715ee6c262e0a0d47a2ac";
+pub const ACCOUNT_SET_ITEM_MAST_ROOT: &str =
+    "0xf7f1a1facd65a56bda0471acaf12c62b99d9f9c8e33c9fa02a64b167fb7669db";
+pub const ACCOUNT_SET_CODE_MAST_ROOT: &str =
+    "0x9d221abcc386973775499406d126764cdf4530ccf8084e27091f7e9f28177bbe";
+pub const ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT: &str =
+    "0x2954c205179f44277730f8976991c863e34abed0cb56b0078d516cd17795ba13";
+pub const ACCOUNT_ACCOUNT_PROCEDURE_1_MAST_ROOT: &str =
+    "0xff06b90f849c4b262cbfbea67042c4ea017ea0e9c558848a951d44b23370bec5";
+pub const ACCOUNT_ACCOUNT_PROCEDURE_2_MAST_ROOT: &str =
+    "0x8ef0092134469a1330e3c468f57c7f085ce611645d09cc7516c786fefc71d794";
 
 // ACCOUNT ASSEMBLY CODE
 // ================================================================================================
@@ -145,14 +159,14 @@ pub fn mock_account_code(assembler: &Assembler) -> AccountCode {
             end
 
             # acct proc 5
-            export.create_note
+            export.create_public_note
                 # apply padding
                 repeat.8
                     push.0 movdn.9
                 end
 
                 # create note
-                exec.tx::create_note
+                exec.tx::create_public_note
                 # => [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
             end
 
@@ -169,7 +183,23 @@ pub fn mock_account_code(assembler: &Assembler) -> AccountCode {
             end
             ";
     let account_module_ast = ModuleAst::parse(account_code).unwrap();
-    AccountCode::new(account_module_ast, assembler).unwrap()
+    let code = AccountCode::new(account_module_ast, assembler).unwrap();
+
+    // Ensures the mast root constants match the latest version of the code.
+    //
+    // The constants will change if the library code changes, and need to be updated so that the
+    // tests will work properly. If these asserts fail, copy the value of the code (the left
+    // value), into the constants.
+    assert_eq!(code.procedures()[0].to_hex(), ACCOUNT_RECEIVE_ASSET_MAST_ROOT);
+    assert_eq!(code.procedures()[1].to_hex(), ACCOUNT_SEND_ASSET_MAST_ROOT);
+    assert_eq!(code.procedures()[2].to_hex(), ACCOUNT_INCR_NONCE_MAST_ROOT);
+    assert_eq!(code.procedures()[3].to_hex(), ACCOUNT_SET_ITEM_MAST_ROOT);
+    assert_eq!(code.procedures()[4].to_hex(), ACCOUNT_SET_CODE_MAST_ROOT);
+    assert_eq!(code.procedures()[5].to_hex(), ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT);
+    assert_eq!(code.procedures()[6].to_hex(), ACCOUNT_ACCOUNT_PROCEDURE_1_MAST_ROOT);
+    assert_eq!(code.procedures()[7].to_hex(), ACCOUNT_ACCOUNT_PROCEDURE_2_MAST_ROOT);
+
+    code
 }
 
 // MOCK ACCOUNT

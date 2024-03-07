@@ -56,7 +56,9 @@ export.get_output_notes_hash
     # => [COM]
 end
 
-#! Creates a new note and returns a pointer to the memory address at which the note is stored.
+#! Creates a new offchain note and returns a pointer to the memory address at which the note is stored.
+#!
+#! Offchain notes have only their hash published to the network.
 #!
 #! Inputs: [ASSET, tag, RECIPIENT]
 #! Outputs: [ptr]
@@ -65,8 +67,27 @@ end
 #! tag is the tag to be included in the note.
 #! RECIPIENT is the recipient of the note.
 #! ptr is the pointer to the memory address at which the note is stored.
-export.create_note
-    syscall.create_note
+export.create_offchain_note
+    syscall.create_offchain_note
+    # => [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    movdn.8 dropw dropw
+    # => [ptr]
+end
+
+#! Creates a new public note and returns a pointer to the memory address at which the note is stored.
+#!
+#! Public notes have their contents published to the network.
+#!
+#! Inputs: [ASSET, tag, RECIPIENT]
+#! Outputs: [ptr]
+#!
+#! ASSET is the asset to be included in the note.
+#! tag is the tag to be included in the note.
+#! RECIPIENT is the recipient of the note.
+#! ptr is the pointer to the memory address at which the note is stored.
+export.create_public_note
+    syscall.create_public_note
     # => [ptr, 0, 0, 0, 0, 0, 0, 0, 0]
 
     movdn.8 dropw dropw

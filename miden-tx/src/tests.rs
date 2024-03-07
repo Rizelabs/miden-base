@@ -12,15 +12,12 @@ use miden_objects::{
 };
 use miden_prover::ProvingOptions;
 use mock::{
-    constants::{
-        non_fungible_asset, ACCOUNT_PROCEDURE_INCR_NONCE_PROC_IDX,
-        ACCOUNT_PROCEDURE_SET_CODE_PROC_IDX, ACCOUNT_PROCEDURE_SET_ITEM_PROC_IDX,
-        FUNGIBLE_ASSET_AMOUNT, MIN_PROOF_SECURITY_LEVEL,
-    },
+    constants::{non_fungible_asset, FUNGIBLE_ASSET_AMOUNT, MIN_PROOF_SECURITY_LEVEL},
     mock::{
         account::{
             MockAccountType, ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN,
             ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_2, ACCOUNT_ID_NON_FUNGIBLE_FAUCET_ON_CHAIN,
+            ACCOUNT_INCR_NONCE_MAST_ROOT, ACCOUNT_SET_CODE_MAST_ROOT, ACCOUNT_SET_ITEM_MAST_ROOT,
             STORAGE_INDEX_0,
         },
         notes::AssetPreservationStatus,
@@ -111,13 +108,6 @@ fn executed_transaction_account_delta() {
     let removed_asset_3 = non_fungible_asset(ACCOUNT_ID_NON_FUNGIBLE_FAUCET_ON_CHAIN);
     let removed_assets = [removed_asset_1, removed_asset_2, removed_asset_3];
 
-    let account_procedure_incr_nonce_mast_root =
-        &data_store.account.code().procedures()[ACCOUNT_PROCEDURE_INCR_NONCE_PROC_IDX].to_hex();
-    let account_procedure_set_code_mast_root =
-        &data_store.account.code().procedures()[ACCOUNT_PROCEDURE_SET_CODE_PROC_IDX].to_hex();
-    let account_procedure_set_item_mast_root =
-        &data_store.account.code().procedures()[ACCOUNT_PROCEDURE_SET_ITEM_PROC_IDX].to_hex();
-
     let tx_script = format!(
         "\
         use.miden::account
@@ -130,12 +120,12 @@ fn executed_transaction_account_delta() {
             push.0 movdn.5 push.0 movdn.5 push.0 movdn.5
             # => [index, V', 0, 0, 0]
 
-            call.{account_procedure_set_item_mast_root}
+            call.{ACCOUNT_SET_ITEM_MAST_ROOT}
             # => [R', V]
         end
 
         proc.set_code
-            call.{account_procedure_set_code_mast_root}
+            call.{ACCOUNT_SET_CODE_MAST_ROOT}
             # => [0, 0, 0, 0]
 
             dropw
@@ -143,7 +133,7 @@ fn executed_transaction_account_delta() {
         end
 
         proc.incr_nonce
-            call.{account_procedure_incr_nonce_mast_root}
+            call.{ACCOUNT_INCR_NONCE_MAST_ROOT}
             # => [0]
 
             drop
@@ -340,12 +330,14 @@ fn test_tx_script() {
         .unwrap();
     let tx_args = TransactionArgs::with_tx_script(tx_script);
 
-    // execute the transaction
     let executed_transaction =
         executor.execute_transaction(account_id, block_ref, &note_ids, Some(tx_args));
 
-    // assert the transaction executed successfully
-    assert!(executed_transaction.is_ok());
+    assert!(
+        executed_transaction.is_ok(),
+        "Transaction execution failed {:?}",
+        executed_transaction,
+    );
 }
 
 // MOCK DATA STORE

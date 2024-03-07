@@ -1,7 +1,7 @@
 use miden_objects::{
     accounts::ACCOUNT_ID_REGULAR_ACCOUNT_IMMUTABLE_CODE_ON_CHAIN,
     assets::{Asset, FungibleAsset},
-    notes::{Note, NoteInclusionProof},
+    notes::{Note, NoteInclusionProof, NoteType},
     transaction::{InputNote, InputNotes},
     Felt, FieldElement, Word,
 };
@@ -161,6 +161,7 @@ fn mock_consumed_notes(
         SERIAL_NUM_1,
         sender,
         Felt::ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
@@ -172,6 +173,7 @@ fn mock_consumed_notes(
         SERIAL_NUM_2,
         sender,
         Felt::ZERO,
+        NoteType::Public,
     )
     .unwrap();
 

@@ -53,7 +53,7 @@ The purpose of this method is to create a note which sends a single asset to the
 ```
 send_asset(asset, recipient)
     self.remove_asset(asset)
-    tx.create_note(recipient, asset)
+    tx.create_public_note(recipient, asset)
 end
 ```
 

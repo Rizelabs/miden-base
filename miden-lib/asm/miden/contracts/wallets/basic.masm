@@ -43,7 +43,6 @@ export.send_asset.1
     push.0 swap loc_store.0 padw push.0.0.0 swapdw loc_load.0
     # => [ASSET, tag, RECIPIENT, ZERO, ZERO, ...]
 
-
-    exec.tx::create_note
+    exec.tx::create_public_note
     # => [note_ptr, ZERO, ZERO, ...]
 end

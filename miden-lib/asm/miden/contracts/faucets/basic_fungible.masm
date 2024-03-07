@@ -69,7 +69,7 @@ export.distribute
     # => [ASSET, tag, RECIPIENT, ...]
 
     # create a note containing the asset
-    exec.tx::create_note
+    exec.tx::create_public_note
     # => [note_ptr, ZERO, ZERO, ...]
 end
 

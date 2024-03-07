@@ -2,7 +2,7 @@ use miden_objects::{
     accounts::AccountId,
     assembly::{Assembler, ProgramAst},
     assets::{Asset, FungibleAsset},
-    notes::{Note, NoteScript},
+    notes::{Note, NoteScript, NoteType},
     utils::collections::*,
     Felt, Word, ZERO,
 };
@@ -13,9 +13,9 @@ use crate::{
         CONSUMED_ASSET_3_AMOUNT,
     },
     mock::account::{
-        ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_1, ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_2,
-        ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_3, ACCOUNT_ID_NON_FUNGIBLE_FAUCET_ON_CHAIN,
-        ACCOUNT_ID_SENDER,
+        ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT, ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_1,
+        ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_2, ACCOUNT_ID_FUNGIBLE_FAUCET_ON_CHAIN_3,
+        ACCOUNT_ID_NON_FUNGIBLE_FAUCET_ON_CHAIN, ACCOUNT_ID_SENDER,
     },
     utils::{prepare_assets, prepare_word},
 };
@@ -61,6 +61,7 @@ pub fn mock_notes(
         SERIAL_NUM_4,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
@@ -72,13 +73,21 @@ pub fn mock_notes(
         SERIAL_NUM_5,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
     const SERIAL_NUM_6: Word = [Felt::new(21), Felt::new(22), Felt::new(23), Felt::new(24)];
-    let created_note_3 =
-        Note::new(note_script, &[Felt::new(2)], &[fungible_asset_3], SERIAL_NUM_6, sender, ZERO)
-            .unwrap();
+    let created_note_3 = Note::new(
+        note_script,
+        &[Felt::new(2)],
+        &[fungible_asset_3],
+        SERIAL_NUM_6,
+        sender,
+        ZERO,
+        NoteType::Public,
+    )
+    .unwrap();
 
     let created_notes = vec![created_note_1, created_note_2, created_note_3];
 
@@ -93,16 +102,16 @@ pub fn mock_notes(
             push.{created_note_0_recipient}
             push.{created_note_0_tag}
             push.{created_note_0_asset}
-            # MAST root of the `create_note` mock account procedure
-            call.0xacb46cadec8d1721934827ed161b851f282f1f4b88b72391a67fed668b1a00ba
+            # MAST root of the `create_public_note` mock account procedure
+            call.{ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT}
             drop dropw dropw
 
             # create note 1
             push.{created_note_1_recipient}
             push.{created_note_1_tag}
             push.{created_note_1_asset}
-            # MAST root of the `create_note` mock account procedure
-            call.0xacb46cadec8d1721934827ed161b851f282f1f4b88b72391a67fed668b1a00ba
+            # MAST root of the `create_public_note` mock account procedure
+            call.{ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT}
             drop dropw dropw
         end
     ",
@@ -124,8 +133,8 @@ pub fn mock_notes(
             push.{created_note_2_recipient}
             push.{created_note_2_tag}
             push.{created_note_2_asset}
-            # MAST root of the `create_note` mock account procedure
-            call.0xacb46cadec8d1721934827ed161b851f282f1f4b88b72391a67fed668b1a00ba
+            # MAST root of the `create_public_note` mock account procedure
+            call.{ACCOUNT_CREATE_PUBLIC_NOTE_MAST_ROOT}
             drop dropw dropw
         end
         ",
@@ -138,9 +147,16 @@ pub fn mock_notes(
 
     // Consumed Notes
     const SERIAL_NUM_1: Word = [Felt::new(1), Felt::new(2), Felt::new(3), Felt::new(4)];
-    let consumed_note_1 =
-        Note::new(note_1_script, &[Felt::new(1)], &[fungible_asset_1], SERIAL_NUM_1, sender, ZERO)
-            .unwrap();
+    let consumed_note_1 = Note::new(
+        note_1_script,
+        &[Felt::new(1)],
+        &[fungible_asset_1],
+        SERIAL_NUM_1,
+        sender,
+        ZERO,
+        NoteType::Public,
+    )
+    .unwrap();
 
     const SERIAL_NUM_2: Word = [Felt::new(5), Felt::new(6), Felt::new(7), Felt::new(8)];
     let consumed_note_2 = Note::new(
@@ -150,6 +166,7 @@ pub fn mock_notes(
         SERIAL_NUM_2,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
@@ -164,6 +181,7 @@ pub fn mock_notes(
         SERIAL_NUM_3,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
@@ -178,6 +196,7 @@ pub fn mock_notes(
         SERIAL_NUM_7,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
@@ -224,6 +243,7 @@ pub fn mock_notes(
         SERIAL_NUM_8,
         sender,
         ZERO,
+        NoteType::Public,
     )
     .unwrap();
 
