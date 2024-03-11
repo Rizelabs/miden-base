@@ -69,7 +69,6 @@ impl TryFrom<u16> for StorageSlotType {
     fn try_from(value: u16) -> Result<Self, Self::Error> {
         let data_type = (value & 0xFF) as u8;
         let value_arity = ((value >> 8) & 0xFF) as u8;
-        println!("value_arity: {}", value_arity);
 
         if value_arity > MAX_VALUE_ARITY {
             return Err("Invalid value arity".to_string());

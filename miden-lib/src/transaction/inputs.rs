@@ -222,7 +222,6 @@ fn add_account_to_advice_inputs(
             inputs.extend_map(map.leaves().map(|(_, leaf)| (leaf.hash(), leaf.to_elements())));
         }
     }
-    //println!("ADVICE_MAP:{:?}", inputs.map);
 
     // --- account vault ------------------------------------------------------
     let vault = account.vault();

@@ -129,7 +129,7 @@ export.set_map_item
     push.0 movdn.9 push.0 movdn.9 push.0 movdn.9
     # => [index, KEY, VALUE, 0, 0, 0]
 
-    syscall.set_account_item
+    syscall.set_account_map_item
     # => [OLD_VALUE]
 end
 
