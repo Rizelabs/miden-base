@@ -41,6 +41,13 @@ pub const DEFAULT_ACCOUNT_CODE: &str = "
     export.basic_eoa::auth_tx_rpo_falcon512
 ";
 
+pub const DEFAULT_GAME_ACCOUNT: &str = "
+    use.miden::contracts::aze_accounts::game->aze_game
+    export.aze_game::allot_points
+    export.aze_game::playhand
+    export.aze_game::basic_aze_game_account
+";
+
 // Default authentication code
 pub const DEFAULT_AUTH_SCRIPT: &str = "
     use.miden::contracts::auth::basic->auth_tx
