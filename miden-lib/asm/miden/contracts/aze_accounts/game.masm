@@ -1,6 +1,3 @@
-use.miden::kernels::tx::account
-use.miden::contracts::wallets::basic->basic_wallet
-
 # winning hands
 const.ROYAL_FLUSH=100
 const.STRAIGHT_FLUSH=200
@@ -18,9 +15,6 @@ const.CALL=100
 const.RAISE=200
 const.FOLD=300
 const.CHECK=400
-
-# commented it since export is not allowed in this context
-export.basic_wallet::send_asset
         
 # currently considering we have only four cards 
 proc.store_cards.3

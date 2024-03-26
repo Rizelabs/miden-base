@@ -19,7 +19,7 @@ use miden_tx::{
     DataStore, DataStoreError, TransactionProver, TransactionVerifier, TransactionVerifierError,
 };
 use mock::{
-    constants::{ACCOUNT_ID_SENDER, DEFAULT_ACCOUNT_CODE, DEFAULT_GAME_ACCOUNT, MIN_PROOF_SECURITY_LEVEL},
+    constants::{ACCOUNT_ID_SENDER, DEFAULT_ACCOUNT_CODE, DEFAULT_GAME_ACCOUNT, MIN_PROOF_SECURITY_LEVEL, DEFAULT_PLAYER_ACCOUNT},
     mock::{
         account::MockAccountType,
         notes::AssetPreservationStatus,
@@ -173,6 +173,29 @@ pub fn get_game_account_with_default_account_code(
     assets: Option<Asset>,
 ) -> Account {
     let account_code_src = DEFAULT_GAME_ACCOUNT;
+    let account_code_ast = ModuleAst::parse(account_code_src).unwrap();
+    let account_assembler = TransactionKernel::assembler();
+
+    let account_code = AccountCode::new(account_code_ast.clone(), &account_assembler).unwrap();
+    let account_storage =
+        AccountStorage::new(vec![(0, (StorageSlotType::Value { value_arity: 0 }, public_key))])
+            .unwrap();
+
+    let account_vault = match assets {
+        Some(asset) => AssetVault::new(&[asset]).unwrap(),
+        None => AssetVault::new(&[]).unwrap(),
+    };
+
+    Account::new(account_id, account_vault, account_storage, account_code, Felt::new(1))
+}
+
+#[allow(dead_code)]
+pub fn get_player_account_with_default_account_code(
+    account_id: AccountId,
+    public_key: Word,
+    assets: Option<Asset>,
+) -> Account {
+    let account_code_src = DEFAULT_PLAYER_ACCOUNT;
     let account_code_ast = ModuleAst::parse(account_code_src).unwrap();
     let account_assembler = TransactionKernel::assembler();
 

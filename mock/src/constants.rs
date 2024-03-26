@@ -42,10 +42,22 @@ pub const DEFAULT_ACCOUNT_CODE: &str = "
 ";
 
 pub const DEFAULT_GAME_ACCOUNT: &str = "
-    use.miden::contracts::aze_accounts::game->aze_game
-    export.aze_game::allot_points
-    export.aze_game::playhand
-    export.aze_game::basic_aze_game_account
+    use.miden::contracts::wallets::basic->basic_wallet
+    use.miden::contracts::auth::basic->basic_eoa
+    use.miden::account
+
+    export.basic_wallet::receive_asset
+    export.basic_wallet::send_asset
+    export.basic_eoa::auth_tx_rpo_falcon512
+
+    export.account::set_item
+";
+
+pub const DEFAULT_PLAYER_ACCOUNT: &str = "
+    use.miden::contracts::aze_accounts::player->aze_player
+    export.aze_player::allot_points
+    export.aze_player::playhand
+    export.aze_player::basic_aze_player_account
 ";
 
 // Default authentication code
